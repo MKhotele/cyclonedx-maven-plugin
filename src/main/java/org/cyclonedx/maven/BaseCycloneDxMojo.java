@@ -303,7 +303,14 @@ public abstract class BaseCycloneDxMojo extends AbstractMojo {
         component.setType(Component.Type.LIBRARY);
         try {
             getLog().debug(MESSAGE_CALCULATING_HASHES);
-            component.setHashes(BomUtils.calculateHashes(artifact.getFile()));
+            // Commented below line which sets hash of binary .jar file
+            // component.setHashes(BomUtils.calculateHashes(artifact.getFile()));
+
+            // Added code to set hashes of *-sources.jar
+            File sourceFile = new File(artifact.getFile().getAbsolutePath().replaceFirst(".jar", "-sources.jar"));
+            getLog().info("Filename" + sourceFile.getAbsolutePath());
+            component.setHashes(BomUtils.calculateHashes(sourceFile));
+
         } catch (IOException e) {
             getLog().error("Error encountered calculating hashes", e);
         }
